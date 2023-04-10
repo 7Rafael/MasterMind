@@ -1,3 +1,4 @@
+
 import random
 import tkinter
 from tkinter import *
@@ -31,7 +32,9 @@ while run:
     exit.place(x=0, y=10)
     def layout():
         global color, squarey, correctColor, correctPos
+
         squarex = 30
+        i = 0
         square = Label(app, text="    ", background=color[i], borderwidth=2, relief="raised")
         square.place(x=30, y=squarey)
         square1 = Label(app, text="    ", background=color[i],borderwidth=2, relief="raised")
@@ -40,7 +43,7 @@ while run:
         square2.place(x=90, y=squarey)
         square3 = Label(app, text="    ", background=color[i],borderwidth=2, relief="raised")
         square3.place(x=120, y=squarey)
-
+        
         while correctPos > 0:
             square = Label(app, text="    ", background=color[2], borderwidth=2, relief="raised")
             square.place(x=squarex, y=squarey)
@@ -62,10 +65,13 @@ while run:
     greenAlreadyChosen = False
     i = 0
     x = 175
+    y = 60
     def selected_button():
-        global  answer, i,x
+        global  answer, i,x,y
         colorPos1 = Label(app, text="    ", background=answer[i], borderwidth=3, relief="raised")
-        colorPos1.place(x=x, y=60)
+        colorPos1.place(x=x, y=y)
+        if i == 3:
+            y += 30
         i+=1
         x += 25
 
