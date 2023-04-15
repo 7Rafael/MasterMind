@@ -1,22 +1,24 @@
-
 import random
 import tkinter
 from tkinter import *
-colors = ["Red", "Green", "Blue", "Yellow", "Orange", "Violet"]
-chances = 10
-attempts = 0
-random.shuffle(colors)
-posColors = colors[0:4]
-answer = []
+from tkinter import messagebox
 
-correctPos= 0
-correctColor = 0
-
-print(posColors)
-print(len(posColors))
 run = True
 
 while run:
+
+    colors = ["Red", "Green", "Blue", "Yellow", "Orange", "Violet"]
+    chances = 8
+    attempts = 0
+    random.shuffle(colors)
+    posColors = colors[0:4]
+    answer = []
+    firstRun = True
+    correctPos = 0
+    correctColor = 0
+
+    print(posColors)
+    print(len(posColors))
     app = Tk()
     app.title('Mastermind')
     app.config(bg='#CCC')
@@ -27,23 +29,44 @@ while run:
         global run
         run=False
         app.destroy()
+        app.quit()
 
     exit = Button(app, text="exit", background="Red", command=exit)
     exit.place(x=0, y=10)
+
+    def standartLayout():
+        global firstRun
+        i=0
+        y = 60
+        if firstRun == True:
+            while i < chances:
+                square = Label(app, text="    ", background=color[0], borderwidth=2, relief="raised")
+                square.place(x=30, y=y)
+                square1 = Label(app, text="    ", background=color[0], borderwidth=2, relief="raised")
+                square1.place(x=60, y=y)
+                square2 = Label(app, text="    ", background=color[0], borderwidth=2, relief="raised")
+                square2.place(x=90, y=y)
+                square3 = Label(app, text="    ", background=color[0], borderwidth=2, relief="raised")
+                square3.place(x=120, y=y)
+                y += 30
+                i+=1
+
+            firstRun = False
+
+
+    standartLayout()
     def layout():
         global color, squarey, correctColor, correctPos
-
         squarex = 30
-        i = 0
-        square = Label(app, text="    ", background=color[i], borderwidth=2, relief="raised")
+        square = Label(app, text="    ", background=color[0], borderwidth=2, relief="raised")
         square.place(x=30, y=squarey)
-        square1 = Label(app, text="    ", background=color[i],borderwidth=2, relief="raised")
+        square1 = Label(app, text="    ", background=color[0],borderwidth=2, relief="raised")
         square1.place(x=60, y=squarey)
-        square2 = Label(app, text="    ", background=color[i],borderwidth=2, relief="raised" )
+        square2 = Label(app, text="    ", background=color[0],borderwidth=2, relief="raised" )
         square2.place(x=90, y=squarey)
-        square3 = Label(app, text="    ", background=color[i],borderwidth=2, relief="raised")
+        square3 = Label(app, text="    ", background=color[0],borderwidth=2, relief="raised")
         square3.place(x=120, y=squarey)
-        
+
         while correctPos > 0:
             square = Label(app, text="    ", background=color[2], borderwidth=2, relief="raised")
             square.place(x=squarex, y=squarey)
@@ -57,6 +80,7 @@ while run:
         squarey += 30
 
 
+
     redAlreadyChosen = False
     blueAlreadyChosen = False
     yellowAlreadyChosen = False
@@ -67,13 +91,27 @@ while run:
     x = 175
     y = 60
     def selected_button():
-        global  answer, i,x,y
-        colorPos1 = Label(app, text="    ", background=answer[i], borderwidth=3, relief="raised")
-        colorPos1.place(x=x, y=y)
-        if i == 3:
-            y += 30
-        i+=1
-        x += 25
+        global answer, i,x, y,red,blue,yellow,violet,green,orange
+
+        try:
+            if i < 4:
+                colorPos1 = Label(app, text="    ", background=answer[i], borderwidth=2, relief="raised")
+                colorPos1.place(x=x, y=y)
+                i += 1
+                x += 25
+            if i == 4:
+                red.config(state="disable")
+                blue.config(state="disable")
+                yellow.config(state="disable")
+                violet.config(state="disable")
+                green.config(state="disable")
+                orange.config(state="disable")
+                x = 175
+                i = 0
+        except:
+            x = 175
+            i=0
+
 
     def red_button():
         global answer, posAnswer, redAlreadyChosen
@@ -81,6 +119,7 @@ while run:
             answer.append("Red")
             redAlreadyChosen = True
             selected_button()
+
 
 
     def blue_button():
@@ -117,15 +156,24 @@ while run:
             greenAlreadyChosen= True
             selected_button()
 
-    y = 60
+
     def checkPlace():
-        global answer,posColors, redAlreadyChosen, blueAlreadyChosen, yellowAlreadyChosen, orangeAlreadyChosen, violetAlreadyChosen, greenAlreadyChosen, y,correctColor,correctPos
+        global answer,posColors, redAlreadyChosen, blueAlreadyChosen, yellowAlreadyChosen, orangeAlreadyChosen, violetAlreadyChosen, greenAlreadyChosen, y,correctColor,correctPos, errorText, run
         i = 0
         while i < len(posColors):# nessa linha ele verifica conta o tamanho do código
-
             if answer[i] in posColors[i]:#aqui ele vai verificar se a cor está na posição correta
                 #tem cor na posição correta
                 correctPos+= 1
+                if correctPos == 4:
+                    tkinter.messagebox.showinfo(title="Parabéns", message="Você ganhou!!!")
+                    result = tkinter.messagebox.askquestion(title="Jogar novamente", message="Deseja jogar novamente?")
+                    if result == 'yes':
+                        run = True
+                        app.destroy()
+                    else:
+                        run = False
+                        app.destroy()
+                        app.quit()
 
             if answer[i] in posColors:#aqui ele vereifica se existe a cor
                 #tem cor na tabela
@@ -134,9 +182,7 @@ while run:
                     correctColor -=1
             i+=1
 
-        print(answer)
         y+= 30
-
         answer = []
         redAlreadyChosen = False
         blueAlreadyChosen = False
@@ -144,16 +190,34 @@ while run:
         orangeAlreadyChosen = False
         violetAlreadyChosen = False
         greenAlreadyChosen = False
-        print(answer)
+
+
+
     def confirm_button():
-        global answer,posColors,chances,attempts
-        if attempts < chances:
+        global answer,posColors,chances,attempts,red,blue,yellow,violet,green,orange, run
+
+        red.config(state="normal")
+        blue.config(state="normal")
+        yellow.config(state="normal")
+        violet.config(state="normal")
+        green.config(state="normal")
+        orange.config(state="normal")
+        if attempts < chances and len(answer) == 4:
             answer = answer[0:4]
             checkPlace()
             layout()
             attempts +=1
-        else:
-            print("perdeu")
+        if attempts == chances:
+            tkinter.messagebox.showinfo(title="Perdeu", message="Você perdeu!")
+            result = tkinter.messagebox.askquestion(title="Jogar novamente", message="Deseja jogar novamente?")
+            if result == 'yes':
+                run = True
+                app.destroy()
+            else:
+                run = False
+                app.destroy()
+                app.quit()
+
 
     red = Button(app, text='    ', background="Red", command=red_button)
     blue = Button(app, text='    ', background="Blue",command=blue_button)
